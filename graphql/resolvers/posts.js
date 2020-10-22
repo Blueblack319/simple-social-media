@@ -42,6 +42,21 @@ const postResolvers = {
       const post = await newPost.save();
       return post;
     },
+    deletePost: async (_, { postId }, context) => {
+      const user = checkAuth(context);
+
+      try {
+        const post = await Post.findById(postId);
+        if (user.userName === post.userName) {
+          await post.deleteOne();
+          return "Post deleted successfully";
+        } else {
+          throw new Error("Action not allowed");
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
   },
 };
 
