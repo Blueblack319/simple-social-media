@@ -22,11 +22,13 @@
     "@babel/node": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
     "apollo-server": "^2.18.2",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
     "gulp": "^4.0.2",
     "gulp-cli": "^2.3.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.9",
     "nodemon": "^2.0.6"
   }
