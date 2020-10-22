@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 
 import User from "../../models/User";
+import validateRegisterInput from "../../utils/validators/validateRegisterInput";
 
 const userResolvers = {
   Mutation: {
@@ -14,7 +15,16 @@ const userResolvers = {
       context,
       info
     ) {
-      //TODO: Validate user data
+      // Validate user data
+      const { errors, valid } = validateRegisterInput(
+        userName,
+        email,
+        password,
+        confirmPassword
+      );
+      if (!valid) {
+        throw new UserInputError("Errors", { errors });
+      }
       // Make sure user doesnt alread exist
       const user = await User.findOne({ userName });
       if (user) {
