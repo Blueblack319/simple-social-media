@@ -2,17 +2,32 @@ import { ApolloServer, gql } from "apollo-server";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
+import Post from "./models/Post";
+
 dotenv.config();
 
 const typeDefs = gql`
+  type Post {
+    id: ID!
+    body: String!
+    userName: String!
+    createdAt: String!
+  }
   type Query {
-    sayHi: String!
+    getPosts: [Post]
   }
 `;
 
 const resolvers = {
   Query: {
-    sayHi: () => "Hello World!!!",
+    getPosts: async () => {
+      try {
+        const posts = await Post.find();
+        return posts;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
   },
 };
 
