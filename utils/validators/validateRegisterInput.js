@@ -18,7 +18,7 @@ const validateRegisterInput = (userName, email, password, confirmPassword) => {
   }
   return {
     errors,
-    valid: Object.keys(errors) < 1,
+    valid: Object.keys(errors).length < 1,
   };
 };
 

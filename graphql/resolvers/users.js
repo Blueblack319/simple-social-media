@@ -6,9 +6,44 @@ dotenv.config();
 
 import User from "../../models/User";
 import validateRegisterInput from "../../utils/validators/validateRegisterInput";
+import validateLoginInput from "../../utils/validators/validateLoginInput";
+
+const getToken = (user) =>
+  jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      userName: user.userName,
+    },
+    process.env.SECRET_KEY,
+    { expiresIn: "1h" }
+  );
 
 const userResolvers = {
   Mutation: {
+    async login(parent, { userName, password }, context, info) {
+      const { errors, valid } = validateLoginInput(userName, password);
+      if (!valid) {
+        throw new UserInputError("Errors", { errors });
+      }
+      const user = await User.findOne({ userName });
+      if (!user) {
+        errors.general = "User not found";
+        throw new UserInputError("User not found", { errors });
+      }
+      const isMatched = bcryptjs.compare(password, user.password);
+      if (!isMatched) {
+        errors.general = "Wrong credentials";
+        throw new UserInputError("Wrong credentials", { errors });
+      }
+
+      const token = getToken(user);
+      return {
+        ...user._doc,
+        id: user.id,
+        token,
+      };
+    },
     async register(
       parent,
       { registerInput: { userName, email, password, confirmPassword } },
@@ -25,6 +60,7 @@ const userResolvers = {
       if (!valid) {
         throw new UserInputError("Errors", { errors });
       }
+
       // Make sure user doesnt alread exist
       const user = await User.findOne({ userName });
       if (user) {
@@ -47,15 +83,8 @@ const userResolvers = {
 
       const res = await newUser.save();
 
-      const token = jwt.sign(
-        {
-          id: res.id,
-          email: res.email,
-          userName: res.userName,
-        },
-        process.env.SECRET_KEY,
-        { expiresIn: "1h" }
-      );
+      const token = getToken(res);
+
       return {
         ...res._doc,
         id: res.id,
