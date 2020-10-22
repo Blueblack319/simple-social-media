@@ -1,6 +1,7 @@
 import bcryptjs from "bcryptjs";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { UserInputError } from "apollo-server";
+import jwt from "jsonwebtoken";
 dotenv.config();
 
 import User from "../../models/User";
@@ -14,8 +15,17 @@ const userResolvers = {
       info
     ) {
       //TODO: Validate user data
-      //TODO: Make sure user doesnt alread exist
-      //TODO: hash password and create an user token
+      // Make sure user doesnt alread exist
+      const user = await User.findOne({ userName });
+      if (user) {
+        throw new UserInputError("Username is already exist", {
+          error: {
+            userName: "This userName is already exist",
+          },
+        });
+      }
+
+      // hash password and create an user token
       password: await bcryptjs.hash(password, 12);
 
       const newUser = new User({
