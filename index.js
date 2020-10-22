@@ -1,4 +1,8 @@
-const { ApolloServer, gql } = require("apollo-server");
+import { ApolloServer, gql } from "apollo-server";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const typeDefs = gql`
   type Query {
@@ -8,12 +12,19 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    sayHi: () => "Hello World",
+    sayHi: () => "Hello World!!!",
   },
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
-server
-  .listen({ port: 5000 })
+mongoose
+  .connect(process.env.MONGODB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("MongoDB Connected ✅");
+    return server.listen({ port: 5000 });
+  })
   .then((res) => console.log(`Server running at ${res.url}`));

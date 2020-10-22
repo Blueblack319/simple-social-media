@@ -4,7 +4,7 @@
   "description": "Build Simple Social Media App",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon --exec babel-node index.js -w"
   },
   "repository": {
     "type": "git",
@@ -17,8 +17,17 @@
   },
   "homepage": "https://github.com/crazybirdz/simple-social-media-app#readme",
   "dependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
     "apollo-server": "^2.18.2",
+    "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
-    "graphql-tag": "^2.11.0"
+    "graphql-tag": "^2.11.0",
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.3.0",
+    "mongoose": "^5.10.9",
+    "nodemon": "^2.0.6"
   }
 }
