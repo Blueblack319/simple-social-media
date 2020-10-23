@@ -10,6 +10,7 @@ const typeDefs = gql`
     id: ID!
     body: String!
     userName: String!
+    createdAt: String!
   }
   type Post {
     id: ID!
@@ -18,6 +19,8 @@ const typeDefs = gql`
     createdAt: String!
     comments: [Comment]!
     likes: [Like]!
+    commentsCount: Int!
+    likesCount: Int!
   }
   type User {
     id: ID!
@@ -44,6 +47,9 @@ const typeDefs = gql`
     createComment(postId: ID!, body: String!): Post!
     deleteComment(postId: ID!, commentId: ID!): Post!
     likePost(postId: ID!): Post!
+  }
+  type Subscription {
+    newPost: Post!
   }
 `;
 
