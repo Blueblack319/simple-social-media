@@ -1,6 +1,11 @@
 import { gql } from "apollo-server";
 
 const typeDefs = gql`
+  type Like {
+    id: ID!
+    userName: String!
+    createdAt: String!
+  }
   type Comment {
     id: ID!
     body: String!
@@ -12,6 +17,7 @@ const typeDefs = gql`
     userName: String!
     createdAt: String!
     comments: [Comment]!
+    likes: [Like]!
   }
   type User {
     id: ID!
@@ -37,6 +43,7 @@ const typeDefs = gql`
     deletePost(postId: ID!): String!
     createComment(postId: ID!, body: String!): Post!
     deleteComment(postId: ID!, commentId: ID!): Post!
+    likePost(postId: ID!): Post!
   }
 `;
 
