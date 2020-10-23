@@ -11,6 +11,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
+  const [errors, setErrors] = useState({});
 
   const ADD_USER = gql`
     mutation register(
@@ -35,10 +36,17 @@ const Register = () => {
       }
     }
   `;
-  // eslint-disable-next-line
   const [addUser, { loading }] = useMutation(ADD_USER, {
+    // eslint-disable-next-line
     update(proxy, result) {
       console.log(result);
+    },
+    onError(err) {
+      setErrors(
+        err.graphQLErrors[0].extensions.errors
+          ? err.graphQLErrors[0].extensions.errors
+          : err.graphQLErrors[0].extensions.error
+      );
     },
     variables: values,
   });
@@ -54,7 +62,7 @@ const Register = () => {
 
   return (
     <div className='register'>
-      <Form onSubmit={handleFormSubmitted}>
+      <Form onSubmit={handleFormSubmitted} loading={loading}>
         <Form.Input
           label='User Name'
           placeholder='User Name'
@@ -62,6 +70,7 @@ const Register = () => {
           name='userName'
           value={values.userName}
           onChange={handleInputChanged}
+          error={errors.userName ? true : false}
         />
         <Form.Input
           label='Email'
@@ -70,6 +79,7 @@ const Register = () => {
           name='email'
           value={values.email}
           onChange={handleInputChanged}
+          error={errors.email ? true : false}
         />
         <Form.Input
           label='Password'
@@ -78,6 +88,7 @@ const Register = () => {
           name='password'
           value={values.password}
           onChange={handleInputChanged}
+          error={errors.password ? true : false}
         />
         <Form.Input
           label='Confirm Password'
@@ -86,11 +97,21 @@ const Register = () => {
           name='confirmPassword'
           value={values.confirmPassword}
           onChange={handleInputChanged}
+          error={errors.confirmPassword ? true : false}
         />
         <Button type='submit' color='teal'>
           Submit
         </Button>
       </Form>
+      {Object.keys(errors).length > 0 && (
+        <div className='ui error message'>
+          <div className='list'>
+            {Object.values(errors).map((value) => (
+              <li key={value}>{value}</li>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
