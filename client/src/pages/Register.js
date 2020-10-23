@@ -3,43 +3,49 @@ import { Form, Button } from "semantic-ui-react";
 import { gql, useMutation } from "@apollo/client";
 
 import "./Register.css";
+import { useForm } from "../utils/hooks";
 
-const Register = () => {
-  const [values, setValues] = useState({
-    userName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+const ADD_USER = gql`
+  mutation register(
+    $userName: String!
+    $email: String!
+    $password: String!
+    $confirmPassword: String!
+  ) {
+    register(
+      registerInput: {
+        userName: $userName
+        email: $email
+        password: $password
+        confirmPassword: $confirmPassword
+      }
+    ) {
+      id
+      email
+      userName
+      createdAt
+      token
+    }
+  }
+`;
+
+const Register = (props) => {
   const [errors, setErrors] = useState({});
 
-  const ADD_USER = gql`
-    mutation register(
-      $userName: String!
-      $email: String!
-      $password: String!
-      $confirmPassword: String!
-    ) {
-      register(
-        registerInput: {
-          userName: $userName
-          email: $email
-          password: $password
-          confirmPassword: $confirmPassword
-        }
-      ) {
-        id
-        email
-        userName
-        createdAt
-        token
-      }
+  const { values, handleInputChanged, handleFormSubmitted } = useForm(
+    registerUser,
+    {
+      userName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     }
-  `;
+  );
+
   const [addUser, { loading }] = useMutation(ADD_USER, {
     // eslint-disable-next-line
     update(proxy, result) {
-      console.log(result);
+      props.history.push("/");
     },
     onError(err) {
       setErrors(
@@ -51,14 +57,10 @@ const Register = () => {
     variables: values,
   });
 
-  const handleInputChanged = (event) => {
-    setValues({ ...values, [event.target.name]: event.target.value });
-  };
-
-  const handleFormSubmitted = (event) => {
-    event.preventDefault();
+  // Arrow function VS function...?
+  function registerUser() {
     addUser();
-  };
+  }
 
   return (
     <div className='register'>
