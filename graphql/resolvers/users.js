@@ -21,7 +21,7 @@ const getToken = (user) =>
 
 const userResolvers = {
   Mutation: {
-    async login(parent, { userName, password }, context, info) {
+    async loginUser(parent, { userName, password }, context, info) {
       const { errors, valid } = validateLoginInput(userName, password);
       if (!valid) {
         throw new UserInputError("Errors", { errors });

@@ -42,7 +42,7 @@ const Home = () => {
             <h1>Loading...</h1>
           ) : (
             data.getPosts.map((post) => (
-              <Grid.Column>
+              <Grid.Column key={post.id}>
                 <PostCard post={post} />
               </Grid.Column>
             ))

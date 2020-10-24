@@ -33,7 +33,7 @@ const Register = (props) => {
   const [errors, setErrors] = useState({});
 
   const { values, handleInputChanged, handleFormSubmitted } = useForm(
-    registerUser,
+    registerUser, // Using function keyword!
     {
       userName: "",
       email: "",
@@ -43,7 +43,6 @@ const Register = (props) => {
   );
 
   const [addUser, { loading }] = useMutation(ADD_USER, {
-    // eslint-disable-next-line
     update(proxy, result) {
       props.history.push("/");
     },
@@ -57,14 +56,15 @@ const Register = (props) => {
     variables: values,
   });
 
-  // Arrow function VS function...?
+  // variable function VS function...? => function used function keyword is defined as soon as its surrounding function or script is executed (due to hoisting).
   function registerUser() {
-    addUser();
+    addUser(); // 정의되기 전에 사용... => 가설: function() 즉, 함수의 실행은 함수정의 전에 해도 되지만 나중에 함수가 무조건 정의되어 있어야 한다?
   }
 
   return (
     <div className='register'>
       <Form onSubmit={handleFormSubmitted} loading={loading}>
+        <h1>Register</h1>
         <Form.Input
           label='User Name'
           placeholder='User Name'
