@@ -21,6 +21,8 @@
     "@babel/core": "^7.12.3",
     "@babel/node": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
+    "apollo-link-context": "^1.0.20",
+    "apollo-link-http": "^1.5.17",
     "apollo-server": "^2.18.2",
     "bcryptjs": "^2.4.3",
     "dotenv": "^8.2.0",
