@@ -41,7 +41,6 @@ const PostCard = ({
           <Button as='div' labelPosition='right' onClick={handleLikesClicked}>
             <Button color='teal'>
               <Icon name='heart' />
-              Likes
             </Button>
             <Label as='a' basic color='teal' pointing='left'>
               {likesCount}
@@ -53,7 +52,6 @@ const PostCard = ({
             onClick={handleCommentsClicked}>
             <Button basic color='blue'>
               <Icon name='comment' />
-              Comments
             </Button>
             <Label as='a' basic color='blue' pointing='left'>
               {commentsCount}

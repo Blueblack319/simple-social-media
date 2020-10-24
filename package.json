@@ -29,6 +29,7 @@
     "gulp": "^4.0.2",
     "gulp-cli": "^2.3.0",
     "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.0.0",
     "mongoose": "^5.10.9",
     "nodemon": "^2.0.6"
   }
