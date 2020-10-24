@@ -50,6 +50,7 @@ const PostForm = () => {
       });
       values.body = "";
     },
+    onError: () => {},
   });
 
   function createPostCallback() {
@@ -57,20 +58,30 @@ const PostForm = () => {
   }
 
   return (
-    <Form onSubmit={handleFormSubmitted}>
-      <h2>Create a Post: </h2>
-      <Form.Field>
-        <Form.Input
-          placeholder='Simple SM'
-          name='body'
-          value={values.body}
-          onChange={handleInputChanged}
-        />
-        <Button type='submit' color='teal'>
-          Submit
-        </Button>
-      </Form.Field>
-    </Form>
+    <div className='postForm'>
+      <Form onSubmit={handleFormSubmitted}>
+        <h2>Create a Post: </h2>
+        <Form.Field>
+          <Form.Input
+            placeholder='Simple SM'
+            name='body'
+            value={values.body}
+            onChange={handleInputChanged}
+            error={error ? true : false}
+          />
+          <Button type='submit' color='teal'>
+            Submit
+          </Button>
+        </Form.Field>
+      </Form>
+      {error && (
+        <div className='ui error message' style={{ marginBottom: "20px" }}>
+          <ul className='list'>
+            <li>{error.graphQLErrors[0].message}</li>
+          </ul>
+        </div>
+      )}
+    </div>
   );
 };
 

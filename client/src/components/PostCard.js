@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Card, Image, Button, Icon, Label } from "semantic-ui-react";
 import moment from "moment";
 import { Link } from "react-router-dom";
+
+import { AuthContext } from "../context/auth";
 
 const PostCard = ({
   post: {
@@ -15,11 +17,13 @@ const PostCard = ({
     likesCount,
   },
 }) => {
+  const { userData } = useContext(AuthContext);
+
   const handleLikesClicked = () => {
     console.log("Likes");
   };
-  const handleCommentsClicked = () => {
-    console.log("Comments");
+  const handlePostDeleted = () => {
+    console.log("Post deleted");
   };
 
   return (
@@ -37,27 +41,31 @@ const PostCard = ({
         <Card.Description>{body}</Card.Description>
       </Card.Content>
       <Card.Content extra>
-        <div className='ui two buttons'>
-          <Button as='div' labelPosition='right' onClick={handleLikesClicked}>
-            <Button color='teal'>
-              <Icon name='heart' />
-            </Button>
-            <Label as='a' basic color='teal' pointing='left'>
-              {likesCount}
-            </Label>
+        <Button as='div' labelPosition='right' onClick={handleLikesClicked}>
+          <Button color='teal'>
+            <Icon name='heart' />
           </Button>
+          <Label as='a' basic color='teal' pointing='left'>
+            {likesCount}
+          </Label>
+        </Button>
+        <Button as='div' labelPosition='right' as={Link} to={`/post/${id}`}>
+          <Button basic color='blue'>
+            <Icon name='comment' />
+          </Button>
+          <Label as='a' basic color='blue' pointing='left'>
+            {commentsCount}
+          </Label>
+        </Button>
+        {userData && userData.userName === userName && (
           <Button
             as='div'
-            labelPosition='right'
-            onClick={handleCommentsClicked}>
-            <Button basic color='blue'>
-              <Icon name='comment' />
-            </Button>
-            <Label as='a' basic color='blue' pointing='left'>
-              {commentsCount}
-            </Label>
+            floated='right'
+            color='red'
+            onClick={handlePostDeleted}>
+            <Icon name='trash' style={{ margin: "0" }} />
           </Button>
-        </div>
+        )}
       </Card.Content>
     </Card>
   );
