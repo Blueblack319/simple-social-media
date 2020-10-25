@@ -3,6 +3,9 @@ import { gql, useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
 import { Button, Icon, Label } from "semantic-ui-react";
 
+import "./LikeButton.css";
+
+// automatically change cache => Furthermore study!
 const LIKE_POST_MUTATION = gql`
   mutation LikePost($postId: ID!) {
     likePost(postId: $postId) {
