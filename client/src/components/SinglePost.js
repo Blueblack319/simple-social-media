@@ -5,6 +5,7 @@ import moment from "moment";
 
 import LikeButton from "./LikeButton";
 import { AuthContext } from "../context/auth";
+import DeleteButton from "./DeleteButton";
 
 const FETCH_POST_QUERY = gql`
   query GetPost($postId: ID!) {
@@ -35,6 +36,9 @@ const SinglePost = (props) => {
       postId,
     },
   });
+  const deletePostCallback = () => {
+    props.history.push("/");
+  };
 
   let postMarkup;
   if (loading) {
@@ -57,7 +61,7 @@ const SinglePost = (props) => {
           <Grid.Column width={2}>
             <Image
               src='https://react.semantic-ui.com/images/avatar/large/matthew.png'
-              size='small'
+              size='massive'
               floated='right'
             />
           </Grid.Column>
@@ -81,6 +85,7 @@ const SinglePost = (props) => {
                       {commentsCount}
                     </Label>
                   </Button>
+                  <DeleteButton postId={id} callback={deletePostCallback} />
                 </Card.Content>
               </Card.Content>
             </Card>
@@ -89,7 +94,7 @@ const SinglePost = (props) => {
       </Grid>
     );
   }
-  return <div></div>;
+  return postMarkup;
 };
 
 export default SinglePost;

@@ -8,13 +8,14 @@ const DELETE_POST_MUTATION = gql`
   }
 `;
 
-const DeleteButton = ({ postId }) => {
+const DeleteButton = ({ postId, callback }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deletePost] = useMutation(DELETE_POST_MUTATION, {
     variables: { postId },
     update: (proxy, result) => {
       setConfirmOpen(false);
       // TODO: Update cached
+      if (callback) callback();
     },
   });
 

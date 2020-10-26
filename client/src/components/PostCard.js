@@ -24,9 +24,6 @@ const PostCard = ({
   const handleLikesClicked = () => {
     console.log("Likes");
   };
-  const handlePostDeleted = () => {
-    console.log("Post deleted");
-  };
 
   return (
     <Card fluid>
