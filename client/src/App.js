@@ -11,6 +11,7 @@ import MenuBar from "./components/MenuBar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import SinglePost from "./components/SinglePost";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Router>
             <MenuBar />
             <Switch>
+              <Route path='/posts/:postId' component={SinglePost} />
               <AuthRoute path='/login' component={Login} />
               <AuthRoute path='/register' component={Register} />
               <Route exac path='/' component={Home} />
