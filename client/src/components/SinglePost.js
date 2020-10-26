@@ -1,6 +1,14 @@
-import React, { useContext } from "react";
-import { gql, useQuery } from "@apollo/client";
-import { Card, Grid, Image, Button, Icon, Label } from "semantic-ui-react";
+import React, { useContext, useState, useRef } from "react";
+import { gql, useQuery, useMutation } from "@apollo/client";
+import {
+  Card,
+  Grid,
+  Image,
+  Button,
+  Icon,
+  Label,
+  Form,
+} from "semantic-ui-react";
 import moment from "moment";
 
 import LikeButton from "./LikeButton";
@@ -29,14 +37,45 @@ const FETCH_POST_QUERY = gql`
   }
 `;
 
+const SUBMIT_COMMENT_MUTATION = gql`
+  mutation CreateComment($postId: ID!, $body: String!) {
+    createComment(postId: $postId, body: $body) {
+      id
+      commentsCount
+      comments {
+        id
+        body
+        userName
+        createdAt
+      }
+    }
+  }
+`;
+
 const SinglePost = (props) => {
   const { userData } = useContext(AuthContext);
   const postId = props.match.params.postId;
+  const [comment, setComment] = useState("");
+  const commentInputRef = useRef(null);
+
+  const handleInputUpdated = (event) => {
+    setComment(event.target.value);
+  };
+
+  const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
+    variables: { postId, body: comment },
+    update: () => {
+      commentInputRef.current.blur();
+      setComment("");
+    },
+  });
+
   const { loading, data } = useQuery(FETCH_POST_QUERY, {
     variables: {
       postId,
     },
   });
+
   const deletePostCallback = () => {
     props.history.push("/");
   };
@@ -54,7 +93,7 @@ const SinglePost = (props) => {
       comments,
       likesCount,
       likes,
-    } = data.getPost;
+    } = data.getPost; // 여기에 적은것은 return되어서 나온다.
 
     postMarkup = (
       <Grid>
@@ -89,22 +128,46 @@ const SinglePost = (props) => {
                   <DeleteButton postId={id} callback={deletePostCallback} />
                 </Card.Content>
               </Card.Content>
-              {comments &&
-                comments.map((comment) => (
-                  <Card fluid key={comment.id}>
-                    <Card.Content>
-                      {userData && userData.userName === comment.userName && (
-                        <DeleteButton postId={id} commentId={comment.id} />
-                      )}
-                      <Card.Header>{comment.userName}</Card.Header>
-                      <Card.Meta>
-                        {moment(comment.createdAt).fromNow()}
-                      </Card.Meta>
-                      <Card.Description>{comment.body}</Card.Description>
-                    </Card.Content>
-                  </Card>
-                ))}
             </Card>
+            {userData && (
+              <Card fluid>
+                <Card.Content>
+                  <h3>Submit a comment</h3>
+                  <Form>
+                    <div className='ui input fluid'>
+                      <input
+                        type='text'
+                        placeholder='Comment...'
+                        name='comment'
+                        value={comment}
+                        onChange={handleInputUpdated}
+                        ref={commentInputRef}
+                      />
+                      <Button
+                        type='submit'
+                        color='teal'
+                        disabled={comment.trim() === ""}
+                        onClick={submitComment}>
+                        Submit
+                      </Button>
+                    </div>
+                  </Form>
+                </Card.Content>
+              </Card>
+            )}
+            {comments &&
+              comments.map((comment) => (
+                <Card fluid key={comment.id}>
+                  <Card.Content>
+                    {userData && userData.userName === comment.userName && (
+                      <DeleteButton postId={id} commentId={comment.id} />
+                    )}
+                    <Card.Header>{comment.userName}</Card.Header>
+                    <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
+                    <Card.Description>{comment.body}</Card.Description>
+                  </Card.Content>
+                </Card>
+              ))}
           </Grid.Column>
         </Grid.Row>
       </Grid>
