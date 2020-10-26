@@ -37,6 +37,7 @@ const commentResolvers = {
         if (post.comments[commentIndex].userName === userName) {
           post.comments.splice(commentIndex, 1);
           await post.save();
+          return post;
         } else {
           throw new AuthenticationError("Action not allowed");
         }

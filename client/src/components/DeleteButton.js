@@ -10,22 +10,40 @@ const DELETE_POST_MUTATION = gql`
   }
 `;
 
-const DeleteButton = ({ postId, callback }) => {
+const DELETE_COMMENT_MUTATION = gql`
+  mutation DeleteComment($postId: ID!, $commentId: ID!) {
+    deleteComment(postId: $postId, commentId: $commentId) {
+      id
+      commentsCount
+      comments {
+        id
+        body
+        userName
+        createdAt
+      }
+    }
+  }
+`;
+
+const DeleteButton = ({ postId, commentId, callback }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [deletePost] = useMutation(DELETE_POST_MUTATION, {
-    variables: { postId },
+  const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION;
+  const [deletePostOrComment] = useMutation(mutation, {
+    variables: { postId, commentId },
     update: (proxy, result) => {
-      setConfirmOpen(false);
-      const data = proxy.readQuery({ query: FETCH_POSTS_QUERY });
-      const getPosts = data.getPosts;
-      const posts = getPosts.filter((post) => {
-        return post.id != postId;
-      });
-      proxy.writeQuery({
-        query: FETCH_POSTS_QUERY,
-        data: { getPosts: [...posts] },
-      });
-      if (callback) callback();
+      setConfirmOpen(false); // Q. Why did delete comment automatically change cache??
+      if (!commentId) {
+        const data = proxy.readQuery({ query: FETCH_POSTS_QUERY });
+        const getPosts = data.getPosts;
+        const posts = getPosts.filter((post) => {
+          return post.id !== postId;
+        });
+        proxy.writeQuery({
+          query: FETCH_POSTS_QUERY,
+          data: { getPosts: [...posts] },
+        });
+        if (callback) callback();
+      }
     },
   });
 
@@ -49,7 +67,7 @@ const DeleteButton = ({ postId, callback }) => {
       <Confirm
         open={confirmOpen}
         onCancel={handleConfirmClosed}
-        onConfirm={deletePost}
+        onConfirm={deletePostOrComment}
       />
     </Fragment>
   );

@@ -17,6 +17,7 @@ const FETCH_POST_QUERY = gql`
       commentsCount
       comments {
         id
+        body
         userName
         createdAt
       }
@@ -88,6 +89,21 @@ const SinglePost = (props) => {
                   <DeleteButton postId={id} callback={deletePostCallback} />
                 </Card.Content>
               </Card.Content>
+              {comments &&
+                comments.map((comment) => (
+                  <Card fluid key={comment.id}>
+                    <Card.Content>
+                      {userData && userData.userName === comment.userName && (
+                        <DeleteButton postId={id} commentId={comment.id} />
+                      )}
+                      <Card.Header>{comment.userName}</Card.Header>
+                      <Card.Meta>
+                        {moment(comment.createdAt).fromNow()}
+                      </Card.Meta>
+                      <Card.Description>{comment.body}</Card.Description>
+                    </Card.Content>
+                  </Card>
+                ))}
             </Card>
           </Grid.Column>
         </Grid.Row>

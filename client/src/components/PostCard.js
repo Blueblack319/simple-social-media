@@ -43,11 +43,11 @@ const PostCard = ({
         <Button as='div' labelPosition='right' onClick={handleLikesClicked}>
           <LikeButton userData={userData} post={{ id, likes, likesCount }} />
         </Button>
-        <Button labelPosition='right' as={Link} to={`/post/${id}`}>
+        <Button labelPosition='right' as={Link} to={`/posts/${id}`}>
           <Button basic color='blue'>
             <Icon name='comment' />
           </Button>
-          <Label as='a' basic color='blue' pointing='left'>
+          <Label as='div' basic color='blue' pointing='left'>
             {commentsCount}
           </Label>
         </Button>
