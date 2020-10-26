@@ -3,6 +3,7 @@ import { gql, useMutation } from "@apollo/client";
 import { Button, Icon, Confirm } from "semantic-ui-react";
 
 import { FETCH_POSTS_QUERY } from "../utils/graphql";
+import CustomPopup from "./CustomPopup";
 
 const DELETE_POST_MUTATION = gql`
   mutation DeletePost($postId: ID!) {
@@ -57,13 +58,15 @@ const DeleteButton = ({ postId, commentId, callback }) => {
 
   return (
     <Fragment>
-      <Button
-        as='div'
-        floated='right'
-        color='red'
-        onClick={handleConfirmOpened}>
-        <Icon name='trash' style={{ margin: "0" }} />
-      </Button>
+      <CustomPopup content={commentId ? "Delete Comment" : "Delete Post"}>
+        <Button
+          as='div'
+          floated='right'
+          color='red'
+          onClick={handleConfirmOpened}>
+          <Icon name='trash' style={{ margin: "0" }} />
+        </Button>
+      </CustomPopup>
       <Confirm
         open={confirmOpen}
         onCancel={handleConfirmClosed}

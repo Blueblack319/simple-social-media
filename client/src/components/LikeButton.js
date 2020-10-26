@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button, Icon, Label } from "semantic-ui-react";
 
 import "./LikeButton.css";
+import CustomPopup from "./CustomPopup";
 
 // automatically change cache => Furthermore study!
 const LIKE_POST_MUTATION = gql`
@@ -49,12 +50,14 @@ const LikeButton = ({ userData, post: { id, likes, likesCount } }) => {
   );
 
   return (
-    <Button as='div' labelPosition='right' onClick={likePost}>
-      {likeButton}
-      <Label as='a' basic color='teal' pointing='left'>
-        {likesCount}
-      </Label>
-    </Button>
+    <CustomPopup content={liked ? "Unlike Post" : "Like Post"}>
+      <Button as='div' labelPosition='right' onClick={likePost}>
+        {likeButton}
+        <Label as='a' basic color='teal' pointing='left'>
+          {likesCount}
+        </Label>
+      </Button>
+    </CustomPopup>
   );
 };
 

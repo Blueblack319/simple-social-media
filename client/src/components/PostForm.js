@@ -4,6 +4,7 @@ import { gql, useMutation } from "@apollo/client";
 
 import { useForm } from "../utils/hooks";
 import { FETCH_POSTS_QUERY } from "../utils/graphql";
+import CustomPopup from "./CustomPopup";
 
 const CREATE_POST_MUTATION = gql`
   mutation CreatePost($body: String!) {
@@ -69,9 +70,11 @@ const PostForm = () => {
             onChange={handleInputChanged}
             error={error ? true : false}
           />
-          <Button type='submit' color='teal'>
-            Submit
-          </Button>
+          <CustomPopup content='Submit Post'>
+            <Button type='submit' color='teal'>
+              Submit
+            </Button>
+          </CustomPopup>
         </Form.Field>
       </Form>
       {error && (
